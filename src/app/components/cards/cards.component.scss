@@ -1,0 +1,43 @@
+.cards-content {
+    mat-card {
+      max-width: 300px;
+      border-radius: 10px;
+      box-shadow: 5px 5px 10px 0;
+      border: 10px solid rgb(221,221,221);
+      .middle-content {
+        .picture {
+          img {
+            padding: 5px 10px 5px 10px;
+            max-width: 280px;
+          }
+        }
+
+        .num-pokemon {
+          text-align: center;
+          p {
+           margin: 5px 0 5px 0;
+          }
+        }
+      }
+
+      .capacities-content {
+        display: flex;
+        justify-content: space-between;
+
+        p:nth-child(1) {
+          font-weight: bold;
+        }
+      }
+     .card-content {
+       p {
+        margin: 10px 0 10px 0;
+       }
+     }
+   }
+}
+
+
+
+
+
+
