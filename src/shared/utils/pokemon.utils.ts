@@ -28,7 +28,7 @@ export const PokemonTypeProperties: { [key: string]: IPokemonProperties } = {
     //'https://i.postimg.cc/WzhqNftS/salameche.png'
     [PokemonType.WATER]: {
         imageUrl: 'https://i.postimg.cc/qMXWXQMm/energie-eau.png',
-        color: 'rgba(118, 235, 124)',
+        color: 'rgba(118, 192, 235)',
     },
     //'https://i.postimg.cc/YC1GCFqc/carapuce.jpg'
 }

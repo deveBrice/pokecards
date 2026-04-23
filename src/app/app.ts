@@ -1,8 +1,9 @@
-import { Component, computed, effect, model, signal } from '@angular/core';
+import { Component, computed, effect, inject, model, signal } from '@angular/core';
 //import { RouterOutlet } from '@angular/router';
 import { CardsComponent } from './components/cards/cards.component';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { Pokemon } from '../shared/models/pokemon.model';
+import { PokemonService } from '../shared/services/pokemon.service';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,8 @@ export class App {
   public pokemon!: Pokemon[];
   public search = model('');
 
+  public pokemonService = inject(PokemonService)
+
   public filtredPokemon = computed(() => {
     const test = this.pokemon.filter((pokemon: Pokemon) => pokemon.name.includes(this.search()))
     console.log(test)
@@ -26,36 +29,11 @@ export class App {
     return this.pokemon[this.selectedPokemonIndex()];
   })
 
+
   constructor() {
 
-     effect(() => {
-      // console.log(this.selectedPokemon())
-     })
-     this.pokemon = [];
-
-     const pokemon = new Pokemon();
-     pokemon.name = "Pikachu";
-     pokemon.hp = 40;
-     pokemon.num = "N°25";
-     this.pokemon.push(pokemon)
-
-    /* const pokemon2 = new Pokemon();
-     pokemon2.name = "Pikachu";
-     pokemon2.hp = 40;
-     pokemon2.num = "N°25";
-     this.pokemon.push(pokemon)
-
-     const pokemon3 = new Pokemon();
-     pokemon3.name = "Pikachu";
-     pokemon3.hp = 40;
-     pokemon3.num = "N°25";
-     this.pokemon.push(pokemon)
-
-     const pokemon4 = new Pokemon();
-     pokemon4.name = "Pikachu";
-     pokemon4.hp = 40;
-     pokemon4.num = "N°25";
-     this.pokemon.push(pokemon)*/
+    this.pokemon = this.pokemonService.getAll();
+     
   }
 
 

@@ -11,9 +11,6 @@
   .cards-content {
     .mat-mdc-card-header {
       display: unset;
+      padding: 10px 10px 0
     }
-    .mat-mdc-card-header-text {
-        display: flex;
-        justify-content: space-between;
-     }
   }
