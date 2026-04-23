@@ -1,15 +1,23 @@
-
 <div class="cards-content">
 
     <mat-card appearance="outlined" [style.background]="backgroundColor()">
         <mat-card-header>
-            <mat-card-title>{{ pokemon().name }}</mat-card-title>
-            <mat-card-title>{{ pokemon().hp }} HP</mat-card-title>
+            <mat-card-title>
+                <div class="name">
+                   <p>{{ pokemon().name }}</p>
+                </div>
+
+                <div class="hp">
+                    <p>{{ pokemon().hp }} HP</p>
+                    <img [src]="pokemonTypeIcon()" alt="">
+                </div>
+
+            </mat-card-title>
+
         </mat-card-header>
         <div class="middle-content">
             <div class="picture">
-                <img mat-card-image [src]="pokemon().imageUrl"
-                    alt="Photo of a Shiba Inu">
+                <img mat-card-image [src]="pokemon().imageUrl" alt="Photo of a Shiba Inu">
             </div>
             <div class="num-pokemon">
                 <p>{{ pokemon().num }} Monster</p>
