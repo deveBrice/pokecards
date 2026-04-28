@@ -1,40 +1,46 @@
 import { Component, computed, effect, inject, model, signal } from '@angular/core';
-//import { RouterOutlet } from '@angular/router';
-import { CardsComponent } from './components/cards/cards.component';
-import { SearchBarComponent } from './components/search-bar/search-bar.component';
-import { Pokemon } from '../shared/models/pokemon.model';
-import { PokemonService } from '../shared/services/pokemon.service';
+import { RouterOutlet } from '@angular/router';
+
+
+
 
 @Component({
   selector: 'app-root',
-  imports: [CardsComponent, SearchBarComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
 
-  public selectedPokemonIndex = signal(0)
-  public pokemon!: Pokemon[];
+  //public selectedPokemonIndex = signal(0)
+  /*public pokemon = signal<Pokemon[]>([])
   public search = model('');
 
   public pokemonService = inject(PokemonService)
 
-  public filtredPokemon = computed(() => {
-    const test = this.pokemon.filter((pokemon: Pokemon) => pokemon.name.includes(this.search()))
-    console.log(test)
-    return test
-  })
-
-  public selectedPokemon = computed(() => {
-    return this.pokemon[this.selectedPokemonIndex()];
-  })
-
-
   constructor() {
 
-    this.pokemon = this.pokemonService.getAll();
-     
+    this.pokemon.set(this.pokemonService.getAll());
+
   }
+
+  public filtredPokemon = computed(() => {
+    const pokemon = this.pokemon().filter((pokemon: Pokemon) => pokemon.name.includes(this.search()));
+    return pokemon
+  })
+
+  public addPokemon() {
+    const pokemon = new Pokemon();
+    this.pokemonService.add(pokemon);
+    this.pokemon.set(this.pokemonService.getAll());
+  }*/
+
+  /*public selectedPokemon = computed(() => {
+    return this.pokemon[this.selectedPokemonIndex()];
+  })*/
+
+
+
 
 
 }
