@@ -7,7 +7,7 @@ export class Pokemon {
     public type: PokemonType = PokemonType.ELECTRIC;
     public hp: number = 40;
     public num: string = "N°25";
-    public capacityNmae: string = "Géo impact";
+    public capacityName: string = "Géo impact";
     public capacityPower: number = 60;
     public capacityDescription: string = "This is long description of a monster attack. Probably something to do with electricity"
 

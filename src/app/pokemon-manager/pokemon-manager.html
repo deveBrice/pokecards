@@ -1,6 +1,79 @@
-@if(pokemonId()) {
-<p>Pokemon {{pokemonId()}}</p>
- <button (click)="next()">Next</button>
-}@else {
-<p>pokemon works</p>
-}
+<div class="pokemon-manager-content">
+    <div class="preview-content">
+        <app-cards [pokemon]="pokemon"></app-cards>
+    </div>
+    <div class="pokemon-form-content">
+        <form [formGroup]="pokemonForm" (ngSubmit)="createCard($event)">
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name">
+            </mat-form-field>
+            <div class="form-field">
+                <button matButton="elevated" type="button" (click)="imageInput.click()">Upload File</button>
+                <span>{{ imageInput.files?.[0]?.name || ' '}}</span>
+                <input hidden #imageInput id="imageUrl" name="imageUrl" type="file" (change)="onFileChange($event)">
+                @if(isFieldValid('imageUrl')) {
+                <div class="error-content">
+                    <p class="error">this field is required</p>
+                </div>
+                }
+            </div>
+            <mat-form-field>
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="type">
+                    @for(ptl of pokemonTypesList; track ptl) {
+                    <mat-option [value]="ptl">{{ ptl }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>HP</mat-label>
+                <input matInput type="number" formControlName="hp">
+
+                @if(pokemonForm.get('hp')?.hasError('required') && isFieldValid('hp')) {
+                <mat-error>this field is required</mat-error>
+                }
+                @if(pokemonForm.get('hp')?.hasError('min') && isFieldValid('hp')) {
+                <mat-error>this field must be begger than 0</mat-error>
+                }
+                @if(pokemonForm.get('hp')?.hasError('max') && isFieldValid('hp')) {
+                <mat-error>this field must be smaller or equal to 200</mat-error>
+                }
+
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Nom de la capacité</mat-label>
+                <input matInput formControlName="capacityName">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Puissance de la capacité</mat-label>
+                <input matInput type="number" formControlName="capacityPower">
+                @if(pokemonForm.get('capacityPower')?.hasError('required') && isFieldValid('capacityPower')) {
+                <mat-error>this field is required</mat-error>
+                }
+                @if(pokemonForm.get('capacityPower')?.hasError('min') && isFieldValid('capacityPower')) {
+                <mat-error>this field must be begger than 0</mat-error>
+                }
+                @if(pokemonForm.get('capacityPower')?.hasError('max') && isFieldValid('capacityPower')) {
+                <mat-error>this field must be smaller or equal to 200</mat-error>
+                }
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Description de la capacité</mat-label>
+                <input matInput formControlName="capacityDescription">
+            </mat-form-field>
+
+            <div class="action-button">
+                <div class="delete-button">
+                    <button mat-flat-button class="warn" type="button" (click)="deletePokemon()">Supprimer</button>
+                </div>
+                <div class="group-button">
+                    <button matButton type="submit" class="create-pokemon"
+                        [disabled]="pokemonForm.invalid">Sauvegarder</button>
+                    <button matButton="filled" class="cancel" color="warn" (click)="back()">Annuler</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>

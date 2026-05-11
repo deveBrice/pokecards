@@ -7,7 +7,7 @@
     <div class="card-list">
 
         @for(pokemon of filtredPokemon(); track pokemon) {
-        <app-cards [pokemon]="pokemon" />
+        <app-cards [pokemon]="pokemon"  (click)="selectedPokeCard(pokemon)"/>
         } @empty {
         <div class="no-pokemon-found">
             <p>Aucun pokemon trouvé</p>

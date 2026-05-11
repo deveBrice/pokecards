@@ -4,6 +4,7 @@ import { Pokemon } from '../../shared/models/pokemon.model';
 import { PokemonService } from '../../shared/services/pokemon.service';
 import { SearchBarComponent } from '../components/search-bar/search-bar.component';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pokemon-list',
@@ -16,13 +17,16 @@ export class PokemonList {
   //public selectedPokemonIndex = signal(0)
   public pokemon = signal<Pokemon[]>([])
   public search = model('');
+  public actionTextManager = signal<string>('');
+  
 
-  public pokemonService = inject(PokemonService)
+  private pokemonService = inject(PokemonService);
+  private router = inject(Router);
 
   constructor() {
 
     this.pokemon.set(this.pokemonService.getAll());
-
+    
   }
 
   public filtredPokemon = computed(() => {
@@ -31,9 +35,11 @@ export class PokemonList {
   })
 
   public addPokemon() {
-    const pokemon = new Pokemon();
-    this.pokemonService.add(pokemon);
-    this.pokemon.set(this.pokemonService.getAll());
+    this.router.navigate(['/pokemon-manager'])
+  }
+
+  public selectedPokeCard(pokemon: Pokemon) {
+    this.router.navigate(['/pokemon-manager/', pokemon.id])
   }
 
   /*public selectedPokemon = computed(() => {
