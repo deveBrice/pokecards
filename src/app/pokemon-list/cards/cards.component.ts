@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 export class CardsComponent {
   
    public pokemon = input(new Pokemon());
+   
 
    constructor() {
     console.log(this.pokemon())

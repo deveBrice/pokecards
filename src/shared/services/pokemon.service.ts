@@ -42,6 +42,8 @@ export class PokemonService {
     pokemon2.imageUrl = 'https://i.postimg.cc/YC1GCFqc/carapuce.jpg';
     pokemon2.type = PokemonType.WATER;
     pokemon2.hp = 80;
+    pokemon2.capacityName = "",
+    pokemon2.capacityPower = 0,
     this.pokemon.push(pokemon2)
 
     const pokemon3 = new Pokemon();
@@ -50,6 +52,8 @@ export class PokemonService {
     pokemon3.imageUrl = 'https://i.postimg.cc/CMXzC7RT/bulbizarre.jpg';
     pokemon3.type = PokemonType.PLANT;
     pokemon3.hp = 80;
+    pokemon2.capacityName = "",
+    pokemon2.capacityPower = 0,
     this.pokemon.push(pokemon3)
 
     const pokemon4 = new Pokemon();
@@ -58,6 +62,8 @@ export class PokemonService {
     pokemon4.imageUrl = 'https://i.postimg.cc/c45X5Nt9/salameche1.png';
     pokemon4.type = PokemonType.FIRE;
     pokemon4.hp = 80;
+    pokemon2.capacityName = "",
+    pokemon2.capacityPower = 0,
     this.pokemon.push(pokemon4)
   }
 

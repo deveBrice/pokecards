@@ -15,7 +15,7 @@ export const routes: Routes = [
                 component: PokemonManager
             },
             {
-                path: ':id',
+                path: ':pokemon-manager',
                 component: PokemonManager
             }
         ]
