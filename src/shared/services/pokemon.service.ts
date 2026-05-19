@@ -1,106 +1,55 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Pokemon } from '../models/pokemon.model';
-import { PokemonType } from '../utils/pokemon.utils';
+import { HttpClient } from '@angular/common/http';
+import { IPokemon } from '../interfaces/pokemon.interface';
+import { map, Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class PokemonService {
-  public pokemon: Pokemon[] = [];
-  public currentIndex: number = 1;
+  
+  private readonly BASE_URL: string = "http://localhost:3000/api/pokemon";
+  
 
-  constructor() {
-     this.load();
+  private http = inject(HttpClient);
+
+  public getAll(): Observable<Pokemon[]> {
+    return this.http.get<IPokemon[]>(this.BASE_URL).pipe(
+      map((pokemonArray: any[]) => {
+          return pokemonArray.map(
+            (pokemon: Pokemon) => Pokemon.fromJson(pokemon)
+          )
+      })
+    )
   }
 
-  private save() {
-    localStorage.setItem('pokemon', JSON.stringify(this.pokemon))
+  public getById(id: number): Observable<Pokemon> {
+     return this.http.get<IPokemon>(this.BASE_URL + id).pipe(
+      map((pokemon: any) => {
+        return Pokemon.fromJson(pokemon)
+      })
+     )
   }
 
-  private load() {
-    const pokemonData = localStorage.getItem('pokemon');
-    if (pokemonData) {
-      this.pokemon = JSON.parse(pokemonData).map((pokemon: Pokemon) => Object.assign(new Pokemon(), pokemon))
-      this.currentIndex = Math.max(...this.pokemon.map((pokemon: Pokemon) => pokemon.id))
-    } else {
-      this.init();
-      this.save();
-    }
+  public add(pokemon: Pokemon): Observable<Pokemon> {
+    return this.http.post<IPokemon>(this.BASE_URL, pokemon.toJson()).pipe(
+      map((pokemon: any) => {
+        return Pokemon.fromJson(pokemon)
+      })
+    )
   }
 
-  private init() {
-    const pokemon = new Pokemon();
-    pokemon.id = this.currentIndex++;
-    pokemon.name = "Pikachu";
-    pokemon.hp = 40;
-    pokemon.num = "N°25";
-    this.pokemon.push(pokemon)
-
-    const pokemon2 = new Pokemon();
-    pokemon2.id = this.currentIndex++;
-    pokemon2.name = "Carapuce";
-    pokemon2.imageUrl = 'https://i.postimg.cc/YC1GCFqc/carapuce.jpg';
-    pokemon2.type = PokemonType.WATER;
-    pokemon2.hp = 80;
-    pokemon2.capacityName = "",
-    pokemon2.capacityPower = 0,
-    this.pokemon.push(pokemon2)
-
-    const pokemon3 = new Pokemon();
-    pokemon3.id = this.currentIndex++;
-    pokemon3.name = 'Bulbizarre';
-    pokemon3.imageUrl = 'https://i.postimg.cc/CMXzC7RT/bulbizarre.jpg';
-    pokemon3.type = PokemonType.PLANT;
-    pokemon3.hp = 80;
-    pokemon2.capacityName = "",
-    pokemon2.capacityPower = 0,
-    this.pokemon.push(pokemon3)
-
-    const pokemon4 = new Pokemon();
-    pokemon4.id = this.currentIndex++;
-    pokemon4.name = 'Salamèche';
-    pokemon4.imageUrl = 'https://i.postimg.cc/c45X5Nt9/salameche1.png';
-    pokemon4.type = PokemonType.FIRE;
-    pokemon4.hp = 80;
-    pokemon2.capacityName = "",
-    pokemon2.capacityPower = 0,
-    this.pokemon.push(pokemon4)
+  public update(pokemon: Pokemon): Observable<Pokemon> {
+     return this.http.put(this.BASE_URL + pokemon.id + '/', pokemon.toJson()).pipe(
+       map((pokemon: any) => {
+        return Pokemon.fromJson(pokemon)
+      })
+     )
   }
 
-  public getAll(): Pokemon[] {
-    return this.pokemon.map((pokemon: Pokemon) => pokemon.copy());
-  }
-
-  public getById(id: number): Pokemon | undefined {
-    const pokemon = this.pokemon.find((pokemon: Pokemon) => pokemon.id === id);
-    return pokemon ? pokemon.copy() : undefined;
-  }
-
-  public add(pokemon: Pokemon) {
-    const pokemonCopy = pokemon.copy();
-    pokemonCopy.id = this.currentIndex;
-    this.pokemon.push(pokemonCopy.copy());
-    this.currentIndex++;
-    this.save();
-    return pokemonCopy;
-  }
-
-  public update(pokemon: Pokemon): Pokemon {
-    const pokemonCopy = pokemon.copy();
-    const pokemonIndex = this.pokemon.findIndex((originalPokemon: Pokemon) => originalPokemon.id === pokemon.id);
-    if (pokemonIndex != -1) {
-      this.pokemon[pokemonIndex] = pokemonCopy.copy();
-      this.save();
-    }
-    return pokemonCopy;
-  }
-
-  public delete(id: number): void {
-    const pokemonIndex = this.pokemon.findIndex((pokemon: Pokemon) => pokemon.id === id);
-
-    if (pokemonIndex != -1) {
-      this.pokemon.splice(pokemonIndex, 1);
-      this.save();
-    }
+  public delete(id: number): Observable<void> {
+     return this.http.delete<void>(this.BASE_URL + id + '/');
   }
 }

@@ -1,16 +1,43 @@
-import { Component, computed, effect, inject, model, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
-
-
+import { Component, computed, effect, inject, model, OnDestroy, signal } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { LoginService } from '../shared/services/login.service';
+import { MatButtonModule } from "@angular/material/button";
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, MatButtonModule, MatToolbarModule, MatIconModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
+
+export class App implements OnDestroy {
+
+  public logoutSubscription: Subscription | null = null;
+
+  public loginService = inject(LoginService);
+  private router = inject(Router)
+
+  public navigatePokemonList () {
+    this.router.navigate(['pokemonList'])
+  }
+
+  public navigateToLogin() {
+    this.router.navigate(['login'])
+  }
+
+  public logout() {
+    this.logoutSubscription = this.loginService.logout().subscribe({
+      next: _ => {
+        this.navigateToLogin();
+      },
+      error: _ => {
+        this.navigateToLogin();
+      }
+    })
+  }
 
   //public selectedPokemonIndex = signal(0)
   /*public pokemon = signal<Pokemon[]>([])
@@ -41,6 +68,8 @@ export class App {
 
 
 
-
+   ngOnDestroy(): void {
+     this.logoutSubscription?.unsubscribe();
+   }
 
 }
