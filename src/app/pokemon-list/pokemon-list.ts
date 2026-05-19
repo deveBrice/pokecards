@@ -1,36 +1,34 @@
 import { Component, computed, inject, model, signal } from '@angular/core';
-import { CardsComponent } from './cards/cards.component';
+//import { CardsComponent } from './cards/cards.component';
 import { Pokemon } from '../../shared/models/pokemon.model';
 import { PokemonService } from '../../shared/services/pokemon.service';
 import { SearchBarComponent } from '../components/search-bar/search-bar.component';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-pokemon-list',
-  imports: [CardsComponent, SearchBarComponent, MatButtonModule],
+  imports: [/*CardsComponent*, SearchBarComponent,*/ MatButtonModule],
   templateUrl: './pokemon-list.html',
   styleUrl: './pokemon-list.scss',
 })
 export class PokemonList {
     
   //public selectedPokemonIndex = signal(0)
-  public pokemon = signal<Pokemon[]>([])
+  
   public search = model('');
   public actionTextManager = signal<string>('');
   
 
   private pokemonService = inject(PokemonService);
   private router = inject(Router);
+  public pokemon = toSignal(this.pokemonService.getAll())
 
-  constructor() {
-
-    this.pokemon.set(this.pokemonService.getAll());
-    
-  }
+  constructor() {}
 
   public filtredPokemon = computed(() => {
-    const pokemon = this.pokemon().filter((pokemon: Pokemon) => pokemon.name.includes(this.search()));
+    const pokemon = this.pokemon()?.filter((pokemon: Pokemon) => pokemon.name.includes(this.search())) ?? [];
     return pokemon
   })
 

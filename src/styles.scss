@@ -7,10 +7,12 @@
 
 body {
   margin: 0;
+  height: 100vh;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 html {
+  height: 100vh;
   @include mat.theme((color: (primary: mat.$azure-palette,
         tertiary: mat.$blue-palette,
       ),

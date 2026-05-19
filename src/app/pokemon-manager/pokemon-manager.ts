@@ -5,19 +5,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { filter, of, Subscription, switchMap } from 'rxjs';
 import { PokemonType } from '../../shared/utils/pokemon.utils';
-import { CardsComponent } from '../pokemon-list/cards/cards.component';
+//import { CardsComponent } from '../pokemon-list/cards/cards.component';
 import { Pokemon } from '../../shared/models/pokemon.model';
 import { CommonModule } from '@angular/common';
 import { PokemonService } from '../../shared/services/pokemon.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DeletePokemonConfirmDialog } from '../components/delete-pokemon-confirm-dialog/delete-pokemon-confirm-dialog';
+import { IPokemon } from '../../shared/interfaces/pokemon.interface';
 
 @Component({
   selector: 'app-pokemon-manager',
   imports: [
-            CardsComponent, 
+           /* CardsComponent,*/ 
             ReactiveFormsModule, 
             MatFormFieldModule, 
             MatSelectModule, 
@@ -30,10 +31,12 @@ import { DeletePokemonConfirmDialog } from '../components/delete-pokemon-confirm
 })
 
 export class PokemonManager implements OnInit, OnDestroy {
+
   public pokemonId = signal<number>(-1);
-  public routeSubscription: Subscription | null = null;
+  public subscription: Subscription = new Subscription();
+
   public pokemonTypesList: string[] = Object.values(PokemonType);
-  private pokemonFormValue: Subscription | null = null;
+  
   public buttonText = input<string>('');
 
  
@@ -45,21 +48,31 @@ export class PokemonManager implements OnInit, OnDestroy {
   private readonly dialog = inject(MatDialog)
 
   ngOnInit(): void {
-    this.pokemonFormValue = this.pokemonForm.valueChanges.subscribe((data: any) => {
+    const formValueSubscription = this.pokemonForm.valueChanges.subscribe((data: any) => {
       this.pokemon = Object.assign(new Pokemon(), data)
     })
-
-
-    this.routeSubscription = this.ar.params.subscribe((params: any) => {
-      console.log(params)
-      if(params['pokemon-manager']) {
-         this.pokemonId.set(parseInt(params['pokemon-manager']))
-         const pokemonFound = this.pokemonService.getById(this.pokemonId())
-         this.pokemon = pokemonFound;
+    
+    this.subscription.add(formValueSubscription)
+    const routeSubscription = this.ar.params.pipe(
+      switchMap((params: any) => {
+        if(params['pokemon-manager']) {
+          this.pokemonId.set(parseInt(params['pokemon-manager']))
+          return this.pokemonService.getById(this.pokemonId())
+        }
+        return of(null)
+      })
+    )
+    
+    .subscribe((pokemon: any) => {
+  
+      if(pokemon) {
+         
+         this.pokemon = pokemon;
          this.pokemonForm.patchValue(this.pokemon)
       }
       
     })
+    this.subscription.add(routeSubscription)
   }
 
   public pokemonForm: FormGroup = this.fb.group({
@@ -100,25 +113,31 @@ export class PokemonManager implements OnInit, OnDestroy {
 
   public createCard(event: Event) {
     event.preventDefault();
-    console.log(this.pokemonId())
+     let saveObservable = null
     if(this.pokemonId() === -1) {
-      this.pokemonService.add(this.pokemon)
+     saveObservable = this.pokemonService.add(this.pokemon)
       
     } else {
       this.pokemon.id = this.pokemonId();
-      this.pokemonService.update(this.pokemon)
+      saveObservable = this.pokemonService.update(this.pokemon)
 
     }
-    this.back()
+    const saveSubscription = saveObservable.subscribe(_ => {
+      this.back();
+    })
+    this.subscription.add(saveSubscription)
   }
 
   public deletePokemon() {
      const dialogRef = this.dialog.open(DeletePokemonConfirmDialog);
-     dialogRef.afterClosed().subscribe((confirm: any) => {
-         if(confirm) {
-          this.pokemonService.delete(this.pokemonId())
-          this.back();
-         }
+
+     dialogRef.afterClosed().pipe(
+      filter((confirm: any) => confirm),
+      switchMap(_ => this.pokemonService.delete(this.pokemonId()))
+     )
+     .subscribe(_ => {
+      
+        this.back(); 
      })
   }
 
@@ -127,7 +146,6 @@ export class PokemonManager implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.routeSubscription?.unsubscribe();
-    this.pokemonFormValue?.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }

@@ -1,6 +1,7 @@
+import { IPokemon } from "../interfaces/pokemon.interface";
 import { PokemonType } from "../utils/pokemon.utils";
 
-export class Pokemon {
+export class Pokemon implements IPokemon{
     public id: number = -1;
     public name: string = "Pikachu";
     public imageUrl: string = 'assets/imgs/pikachu_by_pokefan276_dg6ie8f.jpg';
@@ -13,5 +14,17 @@ export class Pokemon {
 
     public copy(): Pokemon {
         return Object.assign(new Pokemon(), this);
+    }
+    
+    // Get data from to server
+    public static fromJson(pokemonJson: Pokemon): Pokemon {
+        return Object.assign(new Pokemon(), pokemonJson)
+    }
+    
+    // Send data from to Server
+    public toJson(): IPokemon {
+        const pokemonJson: IPokemon = Object.assign(new Pokemon, this);
+        delete pokemonJson.id;
+        return pokemonJson;
     }
 }
