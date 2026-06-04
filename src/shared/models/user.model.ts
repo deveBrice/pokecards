@@ -1,4 +1,5 @@
 export class UserModel {
-    public username: string = "Test";
-    public password: number = 12345;
+    public firstname: string = "";
+    public lastname: string = "";
+    public username: string = "";
 }

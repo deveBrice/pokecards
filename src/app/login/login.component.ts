@@ -4,13 +4,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from "@angular/material/input";
 import { MatButtonModule } from '@angular/material/button';
 import { Credentials, LoginService } from '../../shared/services/login.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserModel } from '../../shared/models/user.model';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInput, MatButtonModule],
+  imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInput, MatButtonModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -36,6 +36,7 @@ export class LoginComponent implements OnDestroy {
       this.loginSubscription = this.loginService.login(this.loginForm.value as Credentials)
       .subscribe({
         next: (result: UserModel | null | undefined) => {
+          console.log(result)
            this.navigatePokemonList();
         },
         error: error => {

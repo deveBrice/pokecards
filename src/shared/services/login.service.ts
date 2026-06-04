@@ -14,12 +14,12 @@ export interface Credentials {
 
 export class LoginService {
   private http = inject(HttpClient);
-  private readonly BASE_URL = "http://localhost:3000";
+  private readonly BASE_URL = "http://localhost:3000/api/auth";
 
   public user = signal<UserModel | null | undefined>(undefined);
 
   public login(credentials: Credentials): Observable<UserModel | null | undefined> {
-    return this.http.post(this.BASE_URL + '/api/login', credentials)
+    return this.http.post(this.BASE_URL + '/signin', credentials)
       .pipe(tap((result: any) => {
         localStorage.setItem('token', result['token'])
         const user = Object.assign(new UserModel(), result['user'])
@@ -32,7 +32,7 @@ export class LoginService {
   }
 
   public getUsers(): Observable<UserModel | null | undefined> {
-    return this.http.get(this.BASE_URL + '/api/user')
+    return this.http.get(this.BASE_URL + '/user')
       .pipe(tap((result: any) => {
         const user = Object.assign(new UserModel(), result)
         this.user.set(user)
@@ -44,8 +44,10 @@ export class LoginService {
   }
 
   public logout(): Observable<null> {
-    return this.http.get(this.BASE_URL + '/api/logout')
+    console.log(this.BASE_URL + '/logout')
+    return this.http.get(this.BASE_URL + '/logout')
       .pipe(tap((result: any) => {
+        console.log('test')
         localStorage.removeItem('token');
         this.user.set(null);
       }))

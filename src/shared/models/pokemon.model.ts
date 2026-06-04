@@ -2,7 +2,7 @@ import { IPokemon } from "../interfaces/pokemon.interface";
 import { PokemonType } from "../utils/pokemon.utils";
 
 export class Pokemon implements IPokemon{
-    public id: number = -1;
+    public _id: number = -1;
     public name: string = "Pikachu";
     public imageUrl: string = 'assets/imgs/pikachu_by_pokefan276_dg6ie8f.jpg';
     public type: PokemonType = PokemonType.ELECTRIC;
@@ -23,7 +23,7 @@ export class Pokemon implements IPokemon{
     
     // Send data from to Server
     public toJson(): IPokemon {
-        const pokemonJson: IPokemon = Object.assign(new Pokemon, this);
+        const pokemonJson: IPokemon = Object.assign(new Pokemon(), this);
         delete pokemonJson.id;
         return pokemonJson;
     }

@@ -5,10 +5,11 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatButtonModule, MatToolbarModule, MatIconModule],
+  imports: [RouterOutlet, MatButtonModule, MatToolbarModule, MatIconModule, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -29,11 +30,12 @@ export class App implements OnDestroy {
   }
 
   public logout() {
-    this.logoutSubscription = this.loginService.logout().subscribe({
-      next: _ => {
+    this.loginService.logout().subscribe({
+      next: (_) => {
+        console.log('test')
         this.navigateToLogin();
       },
-      error: _ => {
+      error: (_) => {
         this.navigateToLogin();
       }
     })
