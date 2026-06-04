@@ -16,9 +16,7 @@ export class CardsComponent {
    public pokemon = input(new Pokemon());
    
 
-   constructor() {
-    console.log(this.pokemon())
-   }
+   constructor() {}
 
    public pokemonTypeIcon = computed(() => {
       return PokemonTypeProperties[this.pokemon().type].imageUrl;

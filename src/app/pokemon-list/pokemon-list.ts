@@ -1,5 +1,5 @@
 import { Component, computed, inject, model, signal } from '@angular/core';
-//import { CardsComponent } from './cards/cards.component';
+import { CardsComponent } from './cards/cards.component';
 import { Pokemon } from '../../shared/models/pokemon.model';
 import { PokemonService } from '../../shared/services/pokemon.service';
 import { SearchBarComponent } from '../components/search-bar/search-bar.component';
@@ -9,7 +9,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-pokemon-list',
-  imports: [/*CardsComponent*, SearchBarComponent,*/ MatButtonModule],
+  imports: [CardsComponent, SearchBarComponent, MatButtonModule],
   templateUrl: './pokemon-list.html',
   styleUrl: './pokemon-list.scss',
 })
@@ -37,7 +37,8 @@ export class PokemonList {
   }
 
   public selectedPokeCard(pokemon: Pokemon) {
-    this.router.navigate(['/pokemon-manager/', pokemon.id])
+   // console.log(pokemon)
+    this.router.navigate(['/pokemon-manager/', pokemon._id])
   }
 
   /*public selectedPokemon = computed(() => {

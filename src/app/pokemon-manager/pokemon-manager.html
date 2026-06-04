@@ -1,4 +1,4 @@
-<!--<div class="pokemon-manager-content">
+<div class="pokemon-manager-content">
     <div class="preview-content">
         <app-cards [pokemon]="pokemon"></app-cards>
     </div>
@@ -64,19 +64,20 @@
             </mat-form-field>
 
             <div class="action-button">
-                @if(pokemonId() === -1) {
+                @if(pokemonId() !== '') {
                   <div class="delete-button">
-                    <button mat-flat-button class="warn" type="button" (click)="deletePokemon()">Supprimer</button>
+                    <button type="button" mat-flat-button class="warn" type="button" (click)="deletePokemon()">Supprimer</button>
                   </div>
                 }
                 
                 <div class="group-button">
                     <button matButton type="submit" class="create-pokemon"
                         [disabled]="pokemonForm.invalid">Sauvegarder</button>
-                    <button matButton="filled" class="cancel" color="warn" (click)="back()">Annuler</button>
+                    <button type="button" matButton="filled" class="cancel" color="warn" (click)="back()">Annuler</button>
                 </div>
 
             </div>
         </form>
     </div>
-</div>-->
+    <button type="button" matButton="filled" (click)="defaultPokecardData()">Defaut</button>
+</div>
